@@ -1,0 +1,3 @@
+#!/bin/sh
+as6502 testerr.asm testerr.hex testerr.lst 2>&1 | tee testerr.err | grep "6502 ASSEMBLER"
+# if [ $? > 0 ]; then echo Oh poo; fi
