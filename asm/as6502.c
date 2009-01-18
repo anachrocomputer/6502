@@ -739,7 +739,7 @@ char cycles[];
       rel = a2 - a1;
       
       if (PASS2 && (rel > 127 || rel < -128)) {
-         nerd ("branch too far");
+         nerd ("Branch too far");
          rel = 0;
       }
 
