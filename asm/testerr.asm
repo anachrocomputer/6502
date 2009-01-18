@@ -1,7 +1,7 @@
 ; testerr --- test program for the 6502 assembler              30/03/2002
 ; Copyright (c) John Honniball. All rights reserved
 
-; This test program attempts to make plausibe coding errors
+; This test program attempts to make plausible coding errors
 ; in order to test the assembler's error detection and reporting
 ; mechanism.  For a test program that should assemble without
 ; errors, see 'testok.asm'.
