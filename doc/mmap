@@ -1,0 +1,18 @@
+E000 New address for ACIA
+E100 PSG 1
+E200 PSG 2
+E300 LH Front-panel LED
+E400 RH Front-panel LED
+E500 Fast Cassette Status
+E600 Fast Cassette Control
+E700
+E800
+E900 Baud Rate Generator
+EA00
+EB00
+EC00
+ED00
+EE00
+EF00
+
+F000 Original address of ACIA
