@@ -1,20 +1,20 @@
-/* as6502 --- B.J.'s 6502 assembler                         16/06/1983 */
+/* as6502 --- John's 6502 assembler                         1983-06-16 */
 /* Copyright (c) 1983 John Honniball, Bambleweeny Computer Systems     */
 
 /* Modification:
- * 16/06/83 BJ  Initial coding (in Ratfor)
- * 18/08/99 BJ  Added hex format options
- * 20/08/99 BJ  Fixed error-checking in 'convert'
- * 21/08/99 BJ  Fixed error-checking in directives
- * 22/08/99 BJ  Added check for current address beyond $FFFF
- * 22/08/99 BJ  Fixed accumulator-mode syntax: ASL A
- * 28/01/00 BJ  Added cycle counts
- * 01/02/00 BJ  Changed behaviour of listing for EQU directives
- * 02/02/00 BJ  Improved handling of erroneous input
- * 15/02/00 BJ  Made lower-case A, X and Y registers legal
- * 17/02/00 BJ  Made mnemonics and directives case-insensitive
- * 21/06/00 BJ  Made assembler return non-zero exit status on error
- * 28/06/00 BJ  Generate code when address bad, to maintain code size
+ * 1983-06-16 JRH Initial coding (in Ratfor)
+ * 1999-08-18 JRH Added hex format options
+ * 1999-08-20 JRH Fixed error-checking in 'convert'
+ * 1999-08-21 JRH Fixed error-checking in directives
+ * 1999-08-22 JRH Added check for current address beyond $FFFF
+ * 1999-08-22 JRH Fixed accumulator-mode syntax: ASL A
+ * 2000-01-28 JRH Added cycle counts
+ * 2000-02-01 JRH Changed behaviour of listing for EQU directives
+ * 2000-02-02 JRH Improved handling of erroneous input
+ * 2000-02-15 JRH Made lower-case A, X and Y registers legal
+ * 2000-02-17 JRH Made mnemonics and directives case-insensitive
+ * 2000-06-21 JRH Made assembler return non-zero exit status on error
+ * 2000-06-28 JRH Generate code when address bad, to maintain code size
  */
  
 /* #define DB */
@@ -33,10 +33,10 @@ int     Errs,              /* Error counter */
         Nbytes;            /* Number of bytes for current instruction */
 address Addr;              /* Current assembly address */
 
-FILE    *Source,            /* Source code fd */
-        *Object,            /* Object code fd */
-        *Listing,           /* Listing fd */
-        *Errorfd;           /* Error list fd */
+FILE    *Source,            /* Source code fp */
+        *Object,            /* Object code fp */
+        *Listing,           /* Listing fp */ 
+        *Errorfd;           /* Error list fp */
 
 struct Sym {
    char    Label[MAXLABEL];   /* Label name      */
