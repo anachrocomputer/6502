@@ -1,3 +1,5 @@
 *.o
 *.hex
 *.lst
+*.err
+asm/as6502
