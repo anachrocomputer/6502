@@ -1,4 +1,4 @@
-; testok --- test program for the 6502 assembler               30/03/2002
+; testok --- test program for the 6502 assembler               2002-03-30
 ; Copyright (c) John Honniball. All rights reserved
 
 ; This test program aims to test each combination of 6502 mnemonic
