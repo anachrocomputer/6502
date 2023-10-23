@@ -57,7 +57,7 @@
 #define LOGIC_OR     '|'
 #define LOGIC_XOR    '^'
 
-/* Addresing modes -- used to index array in the opcode table */
+/* Addressing modes -- used to index array in the opcode table */
 
 #define INHERENT        0
 #define IMMEDIATE       1
