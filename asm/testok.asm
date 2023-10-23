@@ -21,43 +21,50 @@ LASTBYTE        equ     $FFFF             ; Highest address
 ; Labelled but otherwise blank line
 START
 START1          ; begin here
-                BRK                       ; Mnemonics are case-insensitive
+START2          BRK                       ; Mnemonics are case-insensitive
                 brk
-                asl a
-                ASL A                     ; Either 'a' or 'A' for Accumulator
                 PHP
-                CLC
+                pha
                 PLP
-                SEC
-                cli
                 pla
+                SEC
+                CLC
+                cli
                 sei
-                dey
-                tya
-                tay
                 clv
-                iny
                 cld
-                inx
                 sed
+                dex
+                dey
+                inx
+                iny
+                txa
+                tya
+                tax
+                tay
+                txs
+                tsx
+                NOP
+                
+                RTI
+                RTS
                 
 THISADDR        EQU     .
 THATADDR        EQU     .-8
 HERE            JMP     HERE
 
+                asl a
+                ASL A                     ; Either 'a' or 'A' for Accumulator
                 ASL
                 ROL
+                ROL a
+                rol a
                 LSR
+                LSR A
+                lsr a
                 ROR
-                TXA
-                TXS
-                TAX
-                TSX
-                DEX
-                NOP
-                
-                RTI
-                RTS
+                ROR A
+                ror a
 
                 ADC     #$2A
                 ADC     ZP
@@ -162,26 +169,44 @@ GOOD_LABEL2     STY     ZP,X
                 JSR     THERE+4
                 BMI     GOOD_LABEL
                 BVC     GOOD_LABEL2
+                
+                org     $0580
+                BNE     .
+                BEQ     .
+                BMI     .+1               ; Should this address be illegal?
+                BPL     .+1
                 BVS     .+2
                 BCC     .+2
                 BCS     NEXTPG
-                BNE     NEXTPG
+                BCC     NEXTPG
                 BEQ     NEXTPG
+                BNE     NEXTPG
+                BMI     NEXTPG
+                BPL     NEXTPG
+                BVS     NEXTPG
+                BVC     NEXTPG
 
                 JMP     THERE
                 JMP     (IND)
                 JMP     START
                 JMP     START1
+                JMP     START2
+                
                 
 ; Time to test the directives
-                ORG     $0500
+                ORG     $0600
 NEXTPG          byt     $ff,$fe,$fd,$fc
-                byt     "A"
+                byt     "A","B","C","D"
                 WRD     0,1,2,3
-                WRD     "Z"
+                WRD     "Y","Z"
                 TEX     "Hello, world"
                 fcb     1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
                 fcw     1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
+                FCB     $00,$01,$FE,$FF
+                FCW     $0000,$0001
+                FCW     $FFFE,$FFFF
+                FCW     LASTBYTE-1,LASTBYTE
+                FCW     ENDBYTE-1,ENDBYTE
                 
                 LDA     LASTBYTE
                 LDA     LASTBYTE-1
@@ -189,9 +214,11 @@ NEXTPG          byt     $ff,$fe,$fd,$fc
                 nop
                 nop
 
-                org     $FFF0             ; Make sure addresses are OK
+                org     $FFEC             ; Make sure addresses are OK
                 jmp     .                 ; right up to the very end
                 jmp     .+3
+                beq     ENDBYTE
+                bne     ENDBYTE
                 lda     .
                 ldy     .
                 jmp     .                 ; Corner case: use very last address
