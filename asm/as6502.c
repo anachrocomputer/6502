@@ -15,6 +15,8 @@
  * 2000-02-17 JRH Made mnemonics and directives case-insensitive
  * 2000-06-21 JRH Made assembler return non-zero exit status on error
  * 2000-06-28 JRH Generate code when address bad, to maintain code size
+ * 2023-10-25 JRH Add EOF record to checksum hex output file
+ * 2023-10-25 JRH Protect against filling up symbol table and detect duplicate labels
  */
  
 /* #define DB */
@@ -239,7 +241,7 @@ int assemble (const char *mnem, const char *oper, char *cycles);
 void instruction (int mn, const char *oper, char *cycles);
 int operand (const char *oper, int *modep, address *opp);
 int valid_symbol (const char *label);
-void add_symbol (const char *label, address addr);
+int add_symbol (const char *label, address addr);
 void symbols (void);
 int look_up (const char *mnem);
 int opcode_for (int mn, int *modep, address *opp, char *cycles);
@@ -266,7 +268,7 @@ int assemble ();
 void instruction ();
 int operand ();
 int valid_symbol ();
-void add_symbol ();
+int add_symbol ();
 void symbols ();
 int look_up ();
 int opcode_for ();
@@ -315,7 +317,8 @@ const char *argv[];
 
       if (label[0] != EOS) {     /* Fill in the Symbol Table */
          if (valid_symbol (label) == OK)
-            add_symbol (label, Addr);
+            if (add_symbol (label, Addr) == ERR)
+               nerd ("Duplicate label");
       }     
 
       if (mnem[0] != EOS) {      /* Ignore comment lines */
@@ -644,18 +647,32 @@ const char label[];
 
 /* add_symbol --- add a symbol to the symbol table */
 
-void add_symbol (label, addr)
+int add_symbol (label, addr)
 const char label[];
 address addr;
 {
+   int i;
+   
 #ifdef DB
    fprintf (stderr, "add_symbol: label = '%s'\n", label);
 #endif
-
+   
+   if (Nlabels >= (MAXSYMBOLS - 1)) {
+      nerd ("Too many labels");
+      exit (1);
+   }
+   
+   for (i = 0; i < Nlabels; i++) {
+      if (strcmp (label, Symbol[i].Label) == 0)
+         return (ERR);
+   }
+      
    strcpy (Symbol[Nlabels].Label, label);
    Symbol[Nlabels].Address = addr;
 
    Nlabels++;
+   
+   return (OK);
 }
 
 

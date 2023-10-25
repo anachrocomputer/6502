@@ -47,13 +47,9 @@ Implement RMB directive.
 
 Implement a file inclusion mechanism.
 
-Detect duplicate labels and generate error message.
-
 Implement a better symbol table mechanism.
 The original was coded (in Ratfor) as a big array with a linear search algorithm.
 We can do better.
-
-Protect against running out of space in the symbol table.
 
 Use standard C types from 'stdtypes.h' and 'stdbool.h'.
 
