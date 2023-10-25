@@ -47,6 +47,8 @@ Implement RMB directive.
 
 Implement a file inclusion mechanism.
 
+Sort symbol table into alphabetical order in listing file.
+
 Implement a better symbol table mechanism.
 The original was coded (in Ratfor) as a big array with a linear search algorithm.
 We can do better.
