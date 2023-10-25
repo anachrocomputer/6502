@@ -50,7 +50,8 @@ char      Line[MAXLINE];         /* Text of current line */
 
 int     Byte[MAXBYTES],          /* Bytes of current instruction */
         Block[MAXBLOCK],         /* Checksum block for 'save' */
-        Blkptr;                  /* Pointer to next space in Block */
+        Blkptr,                  /* Pointer to next space in Block */
+        Nblocks;                 /* Number of blocks of checksum data */
 address Blkaddr;                 /* Start address of block */
 
 /* inh, imm, abs, abs,X, abs,Y, zpage, zpage,X, zpage,Y, ind,X, ind,Y, rel, ind */
@@ -254,6 +255,7 @@ void set_up (int argc, const char * *argv);
 void list_it (const char *cycles, const char *label, const char *mnem, int mn, const char *oper, const char *comm);
 void putbyte (int byte);
 void putblock (void);
+void puteof (void);
 void cant (const char *path, int bomb);
 address gctol (const char *str, int *ip, int base);
 #else
@@ -280,6 +282,7 @@ void set_up ();
 void list_it ();
 void putbyte ();
 void putblock ();
+void puteof ();
 void cant ();
 address gctol ();
 #endif   /* __STDC__ */
@@ -325,6 +328,7 @@ const char *argv[];
 
    rewind (Source);     /* rewind source file for second pass */
    Nline = 0;           /* reset line number counter */
+   Nblocks = 0;         /* Reset hex block counter */
    Pass = 2;            /* Second pass */
    Addr  = ADDR(0);     /* reset current address pointer */
 
@@ -350,7 +354,9 @@ const char *argv[];
 
    if (Blkptr != 0)
       putblock ();   /* Put out the last block of hex. */
-
+   
+   puteof ();  /* Write EOF marker */
+   
    symbols ();
 
    fprintf (TTY, "%04d ERRORS [6502 ASSEMBLER Rev.%s]\n", Errs, vers);
@@ -1199,9 +1205,42 @@ void putblock ()
       }
 
       fprintf (Object, "%04X\n", checksum);
+      
+      Nblocks++;
    }
 
    Blkaddr += ADDR(blklen);
+}
+
+
+/* puteof --- puts EOF marker onto the object file */
+
+void puteof ()
+{
+   int blklen;
+   unsigned int checksum;
+
+   blklen = 0;
+
+   switch (Hexfmt) {
+   case MOS_HEX:
+      fprintf (Object, ";%02X%04lX", blklen, ADDR(Nblocks));
+      break;
+   case SREC_HEX:
+      fprintf (Object, "S9%02X%04lX", blklen, 0L);
+      break;
+   case INTEL_HEX:
+      fprintf (Object, ":%02X%04lX01", blklen, 0L);
+      break;
+   default:
+      break;
+   }
+
+   checksum = blklen;
+   checksum += ADDR(Nblocks) & 0xff;
+   checksum += (ADDR(Nblocks) >> 8) & 0xff;
+
+   fprintf (Object, "%04X\n", checksum);
 }
 
 

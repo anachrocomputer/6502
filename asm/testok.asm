@@ -221,6 +221,22 @@ NEXTPG          byt     $ff,$fe,$fd,$fc
                 nop
                 nop
 
+; Some tests for the HEX file and checksums
+                org     $0700
+                fcw     $0000,$0000       ; 24 bytes of $00 to minimise the checksum
+                fcw     $0000,$0000
+                fcw     $0000,$0000
+                fcw     $0000,$0000
+                fcw     $0000,$0000
+                fcw     $0000,$0000
+                
+                fcw     $ffff,$ffff       ; 24 bytes of $FF to maximise the checksum
+                fcw     $ffff,$ffff
+                fcw     $ffff,$ffff
+                fcw     $ffff,$ffff
+                fcw     $ffff,$ffff
+                fcw     $ffff,$ffff
+                
                 org     $FFEC             ; Make sure addresses are OK
                 jmp     .                 ; right up to the very end
                 jmp     .+3

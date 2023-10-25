@@ -39,8 +39,6 @@ Once those are installed, we can simply:
 
 Fully implement the generation of Motorola S-Records and Intel Hex format files.
 
-Add end-of-file record to MOS Technology hex files.
-
 Add CMOS 6502 instructions and op-codes.
 The assembler was written at a time when the 65C02 was very new,
 if available at all.
