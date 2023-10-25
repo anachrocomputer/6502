@@ -7,7 +7,6 @@
 ; errors, see 'testok.asm'.
 
 KEY             EQU     $df00             ; Keyboard port
-KEY             EQU     $df01             ; Duplicate label
 ZP              EQU     42                ; Zero-page
 VEC             EQU     $22
 ABS             equ     $4200+$0042
@@ -15,6 +14,8 @@ THERE           equ     $4242-$0042
 IND             equ     $0040|$0002
 BADEQU          equ     $600D
                 equ     $BAD0             ; Un-named EQU
+DUPEQU          equ     $DEAD             ; Duplicate EQU
+DUPEQU          equ     $BEEF
 LASTBYTE        equ     $FFFF             ; Highest address
                                           ; Semi-blank line
                 ORG     $0400             ; Start of user RAM
@@ -190,6 +191,7 @@ GOOD_LABEL2     STY     ZP,X
                 JMP     START
                 JMP     START1
                 JMP     DUPLABEL
+                LDA     DUPEQU
                 
                 ORG     $0500
 NEXTPG          byt     $ff,$fe,$fd,$fc

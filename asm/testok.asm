@@ -10,11 +10,18 @@
 KEY             EQU     $df00             ; Keyboard port
 ZP              EQU     42                ; Zero-page
 VEC             EQU     $22
-ABS             equ     $4200+$0042
+ABS             equ     $4200+$0042       ; Absolute addresses
 THERE           equ     $4242-$0042
-IND             equ     $0040|$0002
-BADEQU          equ     $600D
-LASTBYTE        equ     $FFFF             ; Highest address
+IND             equ     $0040|$0002       ; Zero-page address
+
+FIVE            equ     3+2               ; Check arithmetic
+SIX             equ     3*2
+SEVEN           equ     49/7
+EIGHT           equ     10-2
+CHKAND          equ     $4242&$FF
+CHKEOR          equ     $B2B2^$F0F0
+
+LASTBYTE        equ     $FFFF             ; Highest valid address
                                           ; Semi-blank line
                 ORG     $0400             ; Start of user RAM
                 
