@@ -292,7 +292,7 @@ const char *argv[];
 {
    char label[MAXLABEL], mnem[MAXMNEM];
    char oper[MAXOPER], comm[MAXCOMMENT];
-   char cycles[5];
+   char cycles[MAXCYCSTR];
    int i;
    int mn;
    static char vers[] = "2.1";
@@ -303,6 +303,7 @@ const char *argv[];
    while (fgets (Line, MAXLINE, Source) != NULL) { /* Pass 1 */
       Nline++;
       Nbytes = 0;
+      cycles[0] = EOS;
 #ifdef DB
       fprintf (stderr, "%4d: %s", Nline, Line);
 #endif   /* DB */
@@ -730,9 +731,7 @@ char cycles[];
          (*opp < 256 && *opp >=0))   /* Zero page ? */
       if (Opcodes[mn].obj[*modep + Z_OFFSET] != ERR)
          *modep += Z_OFFSET;
-
-   sprintf (cycles, " %1d ", Opcodes[mn].cyc[*modep]);
-
+   
    if (*modep == ABSOLUTE && Opcodes[mn].obj[*modep] == ERR) { 
       a1 = Addr + ADDR(2);    /* Calculate relative addressing */
       a2 = *opp;
@@ -753,7 +752,9 @@ char cycles[];
          strcpy (cycles, "2/4"); /* Branch within same page */
       else
          strcpy (cycles, "2/5"); /* Branch across page boundary */
-   }             
+   }
+   else
+      snprintf (cycles, MAXCYCSTR, " %1d ", Opcodes[mn].cyc[*modep]);
 
    return (Opcodes[mn].obj[*modep]);
 }
@@ -822,6 +823,9 @@ const char oper[];
          for (i = 1; oper[i] != term && oper[i] != EOS; i++)
             Byte[i-1] = oper[i];
       }
+      break;
+   case END:
+      /* Do nothing */
       break;
 /*  case RMB: */
 /*     if (eval (oper, &Nbytes) == ERR) */

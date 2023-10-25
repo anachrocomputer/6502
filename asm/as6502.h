@@ -10,6 +10,7 @@
 #define MAXCOMMENT     80
 #define MAXLABEL       13
 #define MAXMNEM         5
+#define MAXCYCSTR       5
 #define MAXOPER        81
 #define MAXBLOCK       80
 #define MAXBYTES      256
