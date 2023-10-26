@@ -243,4 +243,8 @@ NEXTPG          byt     $ff,$fe,$fd,$fc
 BOGUS_ORG       org     $FFF0             ; Can't label ORGs
 NEARTOP         jmp     .
                 jmp     BOGUS_ORG
+                jmp     .
+                jmp     .
+                jmp     .
+                nop                       ; This NOP is at $FFFF, which is valid. But the assembler fails anyway
 ENDBYTE         end
