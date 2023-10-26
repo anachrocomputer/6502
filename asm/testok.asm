@@ -181,6 +181,22 @@ _OK_LABEL       STY     ABS
 GOOD_LABEL      STY     ZP
 GOOD_LABEL2     STY     ZP,X
 
+; Confusing but legal label names
+X               NOP
+Y               NOP
+x               jmp     y
+y               jmp     x
+                BEQ     X
+                LDA     X,Y
+                BCC     Y
+                STA     Y,x
+                STX     Y
+                STY     X
+                ASL     X
+                LSR     Y
+                ROR     x
+                ROL     y
+
                 BPL     _OK_LABEL
                 JSR     THERE+4
                 BMI     GOOD_LABEL
