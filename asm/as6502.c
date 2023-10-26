@@ -254,7 +254,7 @@ void nerd (const char *str);
 void for_ref (const char *str);
 void unused (const char *str);
 void set_up (int argc, const char * *argv);
-void list_it (const char *cycles, const char *label, const char *mnem, int mn, const char *oper, const char *comm);
+void list_it (const char *cycles, const char *label, const char *mnem, int mn, const char *oper, const char *comment);
 void putbyte (int byte);
 void putblock (void);
 void puteof (void);
@@ -1127,10 +1127,10 @@ const char *argv[];
 
 /* list_it --- do stuff for the listing */
 
-void list_it (cycles, label, mnem, mn, oper, comm)
+void list_it (cycles, label, mnem, mn, oper, comment)
 const char cycles[], label[], mnem[];
 const int mn;
-const char oper[], comm[];
+const char oper[], comment[];
 {
    int i;
 
@@ -1155,15 +1155,15 @@ const char oper[], comm[];
             fprintf (Listing, "   ");
       }
 
-      fprintf (Listing, "%-3.3s", cycles);
+      fprintf (Listing, "%-3.3s ", cycles);
       
-      fprintf (Listing, "%-16.16s%-4.4s%-20.20s%s\n", label, mnem, oper, comm);
+      fprintf (Listing, "%-16.16s%-4.4s%-20.20s%s\n", label, mnem, oper, comment);
    }
    else if (label[0] != EOS) {
-      fprintf (Listing, "%4d: %04lX                   %-16.16s                        %s\n", Nline, Addr, label, comm);
+      fprintf (Listing, "%4d: %04lX                    %-16.16s                        %s\n", Nline, Addr, label, comment);
    }
    else {
-      fprintf (Listing, "%4d:                        %s\n", Nline, comm);
+      fprintf (Listing, "%4d:                         %s\n", Nline, comment);
    }
 }
 

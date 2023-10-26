@@ -37,6 +37,8 @@ Once those are installed, we can simply:
 
 ## TODO ##
 
+Fix test case for use of byte at address $FFFF. Also fix resulting bug in assembler.
+
 Fully implement the generation of Motorola S-Records and Intel Hex format files.
 
 Add CMOS 6502 instructions and op-codes.
