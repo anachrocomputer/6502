@@ -18,26 +18,48 @@ DUPEQU          equ     $DEAD             ; Duplicate EQU
 DUPEQU          equ     $BEEF
 LASTBYTE        equ     $FFFF             ; Highest address
                                           ; Semi-blank line
-                ORG     $0400             ; Start of user RAM
+ORG_LABEL       ORG     $0400             ; ORG should not be labelled
                 
 START
 START1          ; begin here
                 BRK
                 brk
-                asl a
-                lda ABS=X                 ; Syntax error
-                LDA ABS=X
-BAD-LABEL       LDA ABS
-2ND_BAD_LABEL   LDA ABS
-Z%$@|           LDA ABS
-a               ASL A                     ; Invalid labels
-A               ASL a
-                LEA ABS,X                 ; Invalid mnemonic
-                RTS ZP                    ; Invalid address modes
+                asl     a
+                lda     ABS=X             ; Syntax error
+                LDA     ABS=X
+BAD-LABEL       LDA     ABS
+2ND_BAD_LABEL   LDA     ABS
+Z%$@|           LDA     ABS
+
+a               ASL     A                 ; Invalid labels
+A               ASL     a
+
+                LEA     ABS,X             ; Invalid mnemonic
+                MOV     D1,D3
+                INC     R3+
+                PHX
+                SEX
+                
+                RTS     ZP                ; Invalid address modes
                 LDA
-                INX ABS
-                LDX ABS,X
-                LDY ZP,Y
+                LDA     A
+                INX     ABS
+                LDX     ABS,X
+                LDY     ZP,Y
+                BCC     ABS,Y
+                STA     (ZP),X
+                STX     (ZP)
+                STY     (ZP,Y)
+                JMP     [ABS]
+                JSR     [BP+2]
+                
+                LDA     ABS,Q             ; Invalid register names
+                BNE     ABS,Z
+                SBC     ZP,A
+                LDX     ABS,R1
+                LDY     ZP,A3
+                STA     ABS,HL
+                
                 PHP
                 JMP     NOWHERE
                 JMP     LASTBYTE+1
@@ -214,7 +236,7 @@ NEXTPG          byt     $ff,$fe,$fd,$fc
                 nop
                 nop
 
-BOGUS           org     $FFF0             ; Can't label ORGs
+BOGUS_ORG       org     $FFF0             ; Can't label ORGs
 NEARTOP         jmp     .
-                jmp     BOGUS
+                jmp     BOGUS_ORG
 ENDBYTE         end

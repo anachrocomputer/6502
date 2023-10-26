@@ -45,6 +45,8 @@ if available at all.
 
 Implement RMB directive.
 
+Generate a warning if a JMP indirect vector crosses a page boundary (NMOS 6502 bug)
+
 Implement a file inclusion mechanism.
 
 Sort symbol table into alphabetical order in listing file.

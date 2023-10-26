@@ -14,12 +14,21 @@ ABS             equ     $4200+$0042       ; Absolute addresses
 THERE           equ     $4242-$0042
 IND             equ     $0040|$0002       ; Zero-page address
 
+CASE            equ     "U"               ; Labels are case-sensitive but
+case            EQU     "u"               ;  mnemonics are not
+
 FIVE            equ     3+2               ; Check arithmetic
 SIX             equ     3*2
 SEVEN           equ     49/7
 EIGHT           equ     10-2
 CHKAND          equ     $4242&$FF
 CHKEOR          equ     $B2B2^$F0F0
+
+BINARY          equ     %1010101010101010 ; Check number bases
+OCTAL           equ     @377
+HEXUC           equ     $55AA
+HEXLC           equ     $aa55
+DECIMAL         equ     65535
 
 LASTBYTE        equ     $FFFF             ; Highest valid address
                                           ; Semi-blank line
@@ -60,18 +69,18 @@ THISADDR        EQU     .
 THATADDR        EQU     .-8
 HERE            JMP     HERE
 
-                asl a
-                ASL A                     ; Either 'a' or 'A' for Accumulator
+                asl     a
+                ASL     A                 ; Either 'a' or 'A' for Accumulator
                 ASL
                 ROL
-                ROL a
-                rol a
+                ROL     a
+                rol     a
                 LSR
-                LSR A
-                lsr a
+                LSR     A
+                lsr     a
                 ROR
-                ROR A
-                ror a
+                ROR     A
+                ror     a
 
                 ADC     #$2A
                 ADC     ZP
@@ -204,8 +213,18 @@ GOOD_LABEL2     STY     ZP,X
                 ORG     $0600
 NEXTPG          byt     $ff,$fe,$fd,$fc
                 byt     "A","B","C","D"
+                byt     %00,%01,%10,%11
+                byt     10,11,12,13
+                byt     @10,@11,@12,@13
+                byt     $10,$11,$12,$13
                 WRD     0,1,2,3
                 WRD     "Y","Z"
+                wrd     %1010101001010101,%1111000011110000
+                wrd     10,11
+                wrd     @10,@11
+                wrd     $aa55,$f0f0
+                tex     "abcde"
+                TEX     "12345"
                 TEX     "Hello, world"
                 fcb     1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
                 fcw     1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
@@ -236,6 +255,21 @@ NEXTPG          byt     $ff,$fe,$fd,$fc
                 fcw     $ffff,$ffff
                 fcw     $ffff,$ffff
                 fcw     $ffff,$ffff
+                
+; Test bug in NMOS 6502
+                org     $07ff
+JMP_VEC         WRD     $AAAA             ; JMP vector crosses page boundary
+                JMP     (JMP_VEC)         ; JMP indirect will fail
+                
+; Some checks around the address $8000
+                ORG     $7ffa
+                bcc     .+16
+                bpl     ABOVE
+                nop
+BELOW           nop                       ; At address $7FFF
+                nop                       ; At address $8000
+ABOVE           beq     BELOW                                
+                bne     .-16
                 
                 org     $FFEC             ; Make sure addresses are OK
                 jmp     .                 ; right up to the very end
