@@ -292,7 +292,7 @@ address gctol ();
 void strupr (char *s);
 
 int main (argc, argv)
-int argc;
+const int argc;
 const char *argv[];
 {
    char label[MAXLABEL], mnem[MAXMNEM];
@@ -378,7 +378,6 @@ const char lin[];
 char label[], mnem[], operand[], comment[];
 {
    int i, j;
-   char term;
 
    label[0]   = EOS;
    mnem[0]    = EOS;
@@ -416,7 +415,7 @@ char label[], mnem[], operand[], comment[];
 
    if (lin[i] != COMMENT_SYM && lin[i] != NEWLINE) {
       if (lin[i] == '"' || lin[i] == '\'') {   /* Allow for quoted operands */
-         term = lin[i];    /* terminating character */
+         const char term = lin[i];    /* terminating character */
          operand[0] = term;
          i++;           /* Skip the opening quote */
          for (j = 1; lin[i] != term && lin[i] != NEWLINE ; i++, j++)
@@ -476,7 +475,7 @@ char cycles[];
 /* instruction --- handle instructions */
 
 void instruction (mn, oper, cycles)
-int mn;
+const int mn;
 const char oper[];
 char cycles[];
 {
@@ -539,10 +538,9 @@ int *modep;
 address *opp;
 {
    int mode;
-   int len, i;
+   int i;
    int stat;
 
-   len = strlen (oper);
    mode = ERR;          /* Guilty until proven innocent... */
    stat = ERR;
 
@@ -649,7 +647,7 @@ const char label[];
 
 int add_symbol (label, addr)
 const char label[];
-address addr;
+const address addr;
 {
    int i;
    
@@ -738,14 +736,11 @@ const char mnem[];
 /* opcode_for --- find the opcode for a given mnemonic */
 
 int opcode_for (mn, modep, opp, cycles)
-int mn;
+const int mn;
 int *modep;
 address *opp;
 char cycles[];
 {
-   address a1, a2;
-   address rel;
-   
 #ifdef DB
    fprintf (stderr, "opcode_for: mn = %d (%s), mode = %d\n", mn, Opcodes[mn].mnem, *modep);
 #endif
@@ -756,9 +751,9 @@ char cycles[];
          *modep += Z_OFFSET;
    
    if (*modep == ABSOLUTE && Opcodes[mn].obj[*modep] == ERR) { 
-      a1 = Addr + ADDR(2);    /* Calculate relative addressing */
-      a2 = *opp;
-      rel = a2 - a1;
+      const address a1 = Addr + ADDR(2);    /* Calculate relative addressing */
+      const address a2 = *opp;
+      address rel = a2 - a1;
       
       if (PASS2 && (rel > 127 || rel < -128)) {
          nerd ("Branch too far");
@@ -786,12 +781,11 @@ char cycles[];
 /* directive --- handle directives */
 
 void directive (dir, oper)
-int dir;
+const int dir;
 const char oper[];
 {
    int i, stat;
    address op;
-   char term;
 
    Nbytes = 0;
    i = 0;
@@ -842,7 +836,7 @@ const char oper[];
       Nbytes = strlen (oper) - 2;
 
       if (PASS2) {
-         term = oper[0];   /* save the quote */
+         const char term = oper[0];   /* Save the quote */
          for (i = 1; oper[i] != term && oper[i] != EOS; i++)
             Byte[i-1] = oper[i];
       }
@@ -944,10 +938,9 @@ const char str[]; /* the number to be converted, */
 int *ip;          /* starting at position 'i', */
 address *nump;    /* resulting address */
 {
-   char prefix; /* High or low byte prefix - '>' or '<' */
+   const char prefix = str[*ip];  /* Remember high or low byte prefix - '>' or '<' */
    int stat;     /* Error flag */
-
-   prefix = str[*ip];  /* remember the first character */
+   
    stat = OK;        /* no errors so far... */
 
    if (str[*ip] == HIBYTE || str[*ip] == LOBYTE)   /* skip Hi & LO prefixes */
@@ -1077,7 +1070,7 @@ const char str[];
 /* set_up --- open files, initialise globals */
 
 void set_up (argc, argv)
-int argc;
+const int argc;
 const char *argv[];
 {
    int i;
@@ -1136,14 +1129,15 @@ const char *argv[];
 
 void list_it (cycles, label, mnem, mn, oper, comm)
 const char cycles[], label[], mnem[];
-int mn;
+const int mn;
 const char oper[], comm[];
 {
    int i;
-   address eq;
 
    if (mnem[0] != EOS) {
       if (mn == EQU) {
+         address eq;
+         
          i = 0;
 
          if (sym (label, &i, &eq) == ERR)
@@ -1177,7 +1171,7 @@ const char oper[], comm[];
 /* putbyte --- output a byte to the code file */
 
 void putbyte (byte)
-int byte;
+const int byte;
 {
    Block[Blkptr++] = byte;
 
@@ -1265,7 +1259,7 @@ void puteof ()
 
 void cant (path, bomb)
 const char *path;
-int bomb;
+const int bomb;
 {
    fputs (path, stderr);
    fputs (": can't open\n", stderr);
@@ -1277,7 +1271,7 @@ int bomb;
 address gctol (str, ip, base)
 const char str[];
 int *ip;
-int base;
+const int base;
 {
    const char *p, *newp;
    address val;
