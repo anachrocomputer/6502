@@ -43,6 +43,8 @@ A               ASL     a
                 RTS     ZP                ; Invalid address modes
                 LDA
                 LDA     A
+                ASL     X
+                ROR     Y
                 INX     ABS
                 LDX     ABS,X
                 LDY     ZP,Y
@@ -50,6 +52,8 @@ A               ASL     a
                 STA     (ZP),X
                 STX     (ZP)
                 STY     (ZP,Y)
+                LDA     [X]
+                STA     [Y]
                 JMP     [ABS]
                 JSR     [BP+2]
                 
