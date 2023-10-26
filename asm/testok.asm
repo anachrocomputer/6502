@@ -29,6 +29,10 @@ OCTAL           equ     @377
 HEXUC           equ     $55AA
 HEXLC           equ     $aa55
 DECIMAL         equ     65535
+HIBY            EQU     >HEXUC
+LOBY            EQU     <HEXUC
+HIHEX           equ     >$AA55
+LOHEX           equ     <$AA55
 
 LASTBYTE        equ     $FFFF             ; Highest valid address
                                           ; Semi-blank line
@@ -201,6 +205,8 @@ y               jmp     x
                 JSR     THERE+4
                 BMI     GOOD_LABEL
                 BVC     GOOD_LABEL2
+                LDA     #>GOOD_LABEL
+                LDY     #<GOOD_LABEL
                 
                 org     $0580
                 BNE     .
@@ -233,12 +239,15 @@ NEXTPG          byt     $ff,$fe,$fd,$fc
                 byt     10,11,12,13
                 byt     @10,@11,@12,@13
                 byt     $10,$11,$12,$13
+                BYT     <HERE,>HERE,<GOOD_LABEL,>GOOD_LABEL
                 WRD     0,1,2,3
                 WRD     "Y","Z"
                 wrd     %1010101001010101,%1111000011110000
                 wrd     10,11
                 wrd     @10,@11
                 wrd     $aa55,$f0f0
+                WRD     <HERE,>HERE
+                WRD     <GOOD_LABEL,>GOOD_LABEL
                 tex     "abcde"
                 TEX     "12345"
                 TEX     "Hello, world"
@@ -252,6 +261,10 @@ NEXTPG          byt     $ff,$fe,$fd,$fc
                 
                 LDA     LASTBYTE
                 LDA     LASTBYTE-1
+                LDX     <HERE
+                LDY     >HERE
+                STA     <ZP
+                STY     >ZP
                 JMP     ENDBYTE
                 nop
                 nop
@@ -275,6 +288,10 @@ NEXTPG          byt     $ff,$fe,$fd,$fc
 ; Test bug in NMOS 6502
                 org     $07ff
 JMP_VEC         WRD     $AAAA             ; JMP vector crosses page boundary
+                LDA     #<HERE
+                LDY     #>HERE
+                STA     JMP_VEC
+                STY     JMP_VEC+1
                 JMP     (JMP_VEC)         ; JMP indirect will fail
                 
 ; Some checks around the address $8000
