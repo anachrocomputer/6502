@@ -21,6 +21,10 @@ LASTBYTE        equ     $FFFF             ; Highest address
 ORG_LABEL       ORG     $0400             ; ORG should not be labelled
                 
 START
+LONG__BUT_OK                              ; Long label name
+TOOLONGBY_ONE                             ; One char too long
+TOOLONG_BY_TWO                            ; A bit more too long
+LABEL_THAT_IS_WAAAAAY_TOO_LONG            ; Will be silently truncated
 START1          ; begin here
                 BRK
                 brk
@@ -39,6 +43,10 @@ A               ASL     a
                 INC     R3+
                 PHX
                 SEX
+                LEAX
+                MOV.L
+                MOVSB
+;               MOVSB.W                   ; Will smash the stack and dump core
                 
                 RTS     ZP                ; Invalid address modes
                 LDA
@@ -68,6 +76,11 @@ A               ASL     a
                 JMP     NOWHERE
                 JMP     LASTBYTE+1
                 JMP     LASTBYTE+256
+                JMP     LONG__BUT_OK
+;               JMP     TOOLONGBY_ONE     ; Will cause stack smashing and core dump
+;               JMP     TOOLONG_BY_TWO    ; Will cause stack smashing and core dump
+;               JMP     LABEL_THAT_IS_WAAAAAY_TOO_LONG ; Will cause stack smashing and core dump
+                
                 CLC
 DUPLABEL        PLP                       ; Duplicate label
                 SEC
@@ -223,7 +236,9 @@ GOOD_LABEL2     STY     ZP,X
 NEXTPG          byt     $ff,$fe,$fd,$fc
                 WRD     0,1,2,3
                 TEX     "Hello, world"
+;               .asciiz "Hello, world"    ; Directive too long, smashes stack
                 fcb     13,10,256
+                .fcb    13,10,255
                 FCW     4,65536
                 FCW     NOWHERE
                 BYT     UNDEF_BYTE

@@ -39,6 +39,13 @@ Once those are installed, we can simply:
 
 Fix test case for use of byte at address $FFFF. Also fix resulting bug in assembler.
 
+Fix stack smashing when operand field contains an over-long label name.
+
+Fix over-long label names in general.
+
+Fix stack smashing when the mnemonic or directive name is too long.
+Probably also applies to long operands and long comments as well.
+
 Fully implement the generation of Motorola S-Records and Intel Hex format files.
 
 Add CMOS 6502 instructions and op-codes.
@@ -46,6 +53,12 @@ The assembler was written at a time when the 65C02 was very new,
 if available at all.
 
 Implement RMB directive.
+
+Add .asciiz directive.
+
+Allow directive names to begin with a dot.
+
+Allow label names to end with a colon.
 
 Generate a warning if a JMP indirect vector crosses a page boundary (NMOS 6502 bug)
 
