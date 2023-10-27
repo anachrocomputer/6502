@@ -823,8 +823,14 @@ const char oper[];
    case FCB:
       do {
          stat = evaluate (oper, &i, &op);
-         Byte[Nbytes++] = NUM(op & 0xff);
-      } while (!(oper[i++] != ',' || stat == ERR || Nbytes >= MAXBYTES));
+         if (stat == ERR)
+            break;
+         
+         if (op <= ADDR(0xff))
+            Byte[Nbytes++] = NUM(op);
+         else
+            nerd ("Byte value out of range");
+      } while (!(oper[i++] != ',' || Nbytes >= MAXBYTES));
       
       if (stat == ERR && PASS2)
          nerd ("Undefined label in FCB directive");
@@ -833,9 +839,11 @@ const char oper[];
    case FCW:
       do {
          stat = evaluate (oper, &i, &op);
+         if (stat == ERR)
+            break;
          Byte[Nbytes++] = NUM(op & 0xff);
          Byte[Nbytes++] = NUM(op / 256);
-      } while (!(oper[i++] != ',' || stat == ERR || Nbytes >= MAXBYTES));
+      } while (!(oper[i++] != ',' || Nbytes >= MAXBYTES));
       
       if (stat == ERR && PASS2)
          nerd ("Undefined label in FCW directive");
