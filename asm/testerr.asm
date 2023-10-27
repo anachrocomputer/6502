@@ -47,7 +47,7 @@ A               ASL     a
                 LEAX
                 MOV.L
                 MOVSB
-;               MOVSB.W                   ; Will smash the stack and dump core
+                MOVSB.W                   ; Will be truncated
                 
                 RTS     ZP                ; Invalid address modes
                 LDA
@@ -87,7 +87,7 @@ DUPLABEL        PLP                       ; Duplicate label
                 SEC
 DUPLABEL        PHA
                 cli
-                pla
+COLON_LABEL::   pla                       ; One colon is OK, two are not
                 sei
                 dey
                 tya
@@ -237,7 +237,7 @@ GOOD_LABEL2     STY     ZP,X
 NEXTPG          byt     $ff,$fe,$fd,$fc
                 WRD     0,1,2,3
                 TEX     "Hello, world"
-;               .asciiz "Hello, world"    ; Directive too long, smashes stack
+                .asciiz "Hello, world"    ; Directive too long, will be truncated
                 fcb     13,10,256
                 .fcb    13,10,255
                 FCW     4,65536

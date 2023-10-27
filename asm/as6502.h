@@ -35,6 +35,7 @@
 #define WRITE        "w"
 
 #define COMMENT_SYM  ';'
+#define LABEL_SYM    ':'   /* Allow colon after a label because many assemblers require that */
 #define INDEX_SYM    ','
 #define INDIRECT_SYM '('
 #define INDIRECT_END ')'

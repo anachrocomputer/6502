@@ -394,7 +394,7 @@ char label[], mnem[], operand[], comment[];
       return;
    }
 
-   for (i = j = 0; (lin[i] != ' ') && (lin[i] != NEWLINE); i++)
+   for (i = j = 0; (lin[i] != ' ') && (lin[i] != LABEL_SYM) && (lin[i] != NEWLINE); i++)
       if (i < (MAXLABEL - 1))    /* Truncate excessively long labels */
          label[j++] = lin[i];
 
@@ -402,14 +402,18 @@ char label[], mnem[], operand[], comment[];
    
    if (i != j)
       fprintf (Errorfd, "Warning: %s: label truncated at %d characters\n", label, MAXLABEL - 1);
-
+   
+   if (lin[i] == LABEL_SYM)   /* Skip the colon if there was one */
+      i++;
+   
    SKIPBL(lin, i);   /* Skip blanks between label and mnemonic */
 
    if (lin[i] != COMMENT_SYM) {
-      for (j = 0; lin[i] != ' ' && lin[i] != NEWLINE; i++, j++)
-         mnem[j] = lin[i];    /* Grab mnemonic */
+      for (j = 0; lin[i] != ' ' && lin[i] != NEWLINE; i++)
+         if (j < (MAXMNEM - 1))
+            mnem[j++] = lin[i];    /* Grab mnemonic */
 
-      mnem [j] = EOS;
+      mnem[j] = EOS;
    }
    else
       mnem[0] = EOS;
@@ -419,14 +423,13 @@ char label[], mnem[], operand[], comment[];
 
    if (lin[i] != COMMENT_SYM && lin[i] != NEWLINE) {
       if (lin[i] == '"' || lin[i] == '\'') {   /* Allow for quoted operands */
-         const char term = lin[i];    /* terminating character */
-         operand[0] = term;
+         const char quote = lin[i];    /* terminating character */
+         operand[0] = quote;
          i++;           /* Skip the opening quote */
-         for (j = 1; lin[i] != term && lin[i] != NEWLINE ; i++, j++)
+         for (j = 1; lin[i] != quote && lin[i] != NEWLINE ; i++, j++)
             operand[j] = lin[i]; /* Grab operand */
 
-         operand[j] = term;
-         j++;
+         operand[j++] = quote;
          operand[j] = EOS;
          i++;
          SKIPBL(lin, i);

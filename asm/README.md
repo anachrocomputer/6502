@@ -46,6 +46,8 @@ Fix over-long label names in general.
 Fix stack smashing when the mnemonic or directive name is too long.
 Probably also applies to long operands and long comments as well.
 
+Maybe, just maybe, allow TABs between fields.
+
 Fully implement the generation of Motorola S-Records and Intel Hex format files.
 
 Add CMOS 6502 instructions and op-codes.

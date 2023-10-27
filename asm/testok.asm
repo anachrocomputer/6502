@@ -47,8 +47,8 @@ AAAAAAAAAAAA    PHP
 ZZZZZZZZZZZZ    pha
 _ZZZZZZZZZZZ    PLP                       ; Labels can begin with an underscore
 _A_A_A_A_A_A    pla                       ;  and contain underscores
-                SEC
-                CLC
+COLON_LABEL:    SEC                       ; Allow a label to be followed by a colon for
+COLON:          CLC                       ;  compatibility with assemblers that require one
                 cli
                 sei
                 clv
@@ -192,6 +192,8 @@ GOOD_LABEL2     STY     ZP,X
                 LDA     _A_A_A_A_A_A,y
                 LDA     #<_ZZZZZZZZZZZ+<AAAAAAAAAAAA
                 LDY     #>_A_A_A_A_A_A|>ZZZZZZZZZZZZ
+                STA     COLON_LABEL
+                STY     COLON
 
 ; Confusing but legal label names
 X               NOP
