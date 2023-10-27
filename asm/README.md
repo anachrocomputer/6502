@@ -57,8 +57,6 @@ Add .asciiz directive.
 
 Allow directive names to begin with a dot.
 
-Allow label names to end with a colon.
-
 Generate a warning if a JMP indirect vector crosses a page boundary (NMOS 6502 bug)
 
 Implement a file inclusion mechanism.
