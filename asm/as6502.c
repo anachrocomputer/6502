@@ -394,10 +394,11 @@ char label[], mnem[], operand[], comment[];
       return;
    }
 
-   for (i = 0; (lin[i] != ' ') && (lin[i] != NEWLINE); i++)
-      label[i] = lin[i];
+   for (i = j = 0; (lin[i] != ' ') && (lin[i] != NEWLINE); i++)
+      if (i < (MAXLABEL - 1))    /* Truncate excessively long labels */
+         label[j++] = lin[i];
 
-   label[i] = EOS;
+   label[j] = EOS;
 
    SKIPBL(lin, i);   /* Skip blanks between label and mnemonic */
 

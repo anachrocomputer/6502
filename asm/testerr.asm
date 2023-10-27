@@ -25,9 +25,10 @@ LONG__BUT_OK                              ; Long label name
 TOOLONGBY_ONE                             ; One char too long
 TOOLONG_BY_TWO                            ; A bit more too long
 LABEL_THAT_IS_WAAAAAY_TOO_LONG            ; Will be silently truncated
+
 START1          ; begin here
-                BRK
-                brk
+TOOLONG_BYONE   BRK
+TOO_LONG_BYTWO  brk
                 asl     a
                 lda     ABS=X             ; Syntax error
                 LDA     ABS=X

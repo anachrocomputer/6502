@@ -42,11 +42,11 @@ LASTBYTE        equ     $FFFF             ; Highest valid address
 START
 START1          ; begin here
 START2          BRK                       ; Mnemonics are case-insensitive
-                brk
-                PHP
-                pha
-                PLP
-                pla
+L23456789012    brk                       ; Labels can be up to 12 characters long
+AAAAAAAAAAAA    PHP
+ZZZZZZZZZZZZ    pha
+_ZZZZZZZZZZZ    PLP                       ; Labels can begin with an underscore
+_A_A_A_A_A_A    pla                       ;  and contain underscores
                 SEC
                 CLC
                 cli
@@ -184,6 +184,14 @@ HERE            JMP     HERE
 _OK_LABEL       STY     ABS
 GOOD_LABEL      STY     ZP
 GOOD_LABEL2     STY     ZP,X
+
+                LDA     L23456789012      ; Use the long labels so we don't get a warning
+                LDA     AAAAAAAAAAAA      ;  and also as a test
+                LDA     ZZZZZZZZZZZZ
+                LDA     _ZZZZZZZZZZZ,x
+                LDA     _A_A_A_A_A_A,y
+                LDA     #<_ZZZZZZZZZZZ+<AAAAAAAAAAAA
+                LDY     #>_A_A_A_A_A_A|>ZZZZZZZZZZZZ
 
 ; Confusing but legal label names
 X               NOP
