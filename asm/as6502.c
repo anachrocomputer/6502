@@ -296,7 +296,7 @@ const int argc;
 const char *argv[];
 {
    char label[MAXLABEL], mnem[MAXMNEM];
-   char oper[MAXOPER], comm[MAXCOMMENT];
+   char oper[MAXOPER], comment[MAXCOMMENT];
    char cycles[MAXCYCSTR];
    int i;
    int mn;
@@ -313,7 +313,7 @@ const char *argv[];
       fprintf (stderr, "%4d: %s", Nline, Line);
 #endif   /* DB */
 
-      chop_up (Line, label, mnem, oper, comm);
+      chop_up (Line, label, mnem, oper, comment);
 
       if (label[0] != EOS) {     /* Fill in the Symbol Table */
          if (valid_symbol (label) == OK)
@@ -341,7 +341,7 @@ const char *argv[];
       cycles[0] = EOS;
       mn = ERR;
 
-      chop_up (Line, label, mnem, oper, comm);
+      chop_up (Line, label, mnem, oper, comment);
 
       if (mnem[0] != EOS)     /* Ignore comments */
          mn = assemble (mnem, oper, cycles);
@@ -351,7 +351,7 @@ const char *argv[];
             putbyte (Byte[i]);
       }
 
-      list_it (cycles, label, mnem, mn, oper, comm);
+      list_it (cycles, label, mnem, mn, oper, comment);
       Addr += ADDR(Nbytes);
    }
 
@@ -399,6 +399,9 @@ char label[], mnem[], operand[], comment[];
          label[j++] = lin[i];
 
    label[j] = EOS;
+   
+   if (i != j)
+      fprintf (Errorfd, "Warning: %s: label truncated at %d characters\n", label, MAXLABEL - 1);
 
    SKIPBL(lin, i);   /* Skip blanks between label and mnemonic */
 

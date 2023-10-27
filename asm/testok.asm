@@ -247,6 +247,7 @@ NEXTPG          byt     $ff,$fe,$fd,$fc
                 byt     10,11,12,13
                 byt     @10,@11,@12,@13
                 byt     $10,$11,$12,$13
+                byt     255,@377,$ff,%11111111
                 BYT     <HERE,>HERE,<GOOD_LABEL,>GOOD_LABEL
                 WRD     0,1,2,3
                 WRD     "Y","Z"
@@ -254,6 +255,8 @@ NEXTPG          byt     $ff,$fe,$fd,$fc
                 wrd     10,11
                 wrd     @10,@11
                 wrd     $aa55,$f0f0
+                wrd     65535,@177777
+                wrd     $ffff,%1111111111111111
                 WRD     <HERE,>HERE
                 WRD     <GOOD_LABEL,>GOOD_LABEL
                 tex     "abcde"
