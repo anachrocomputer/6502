@@ -1,11 +1,6 @@
 /* Definitions for the 6502 assembler                                */
 /* Copyright (c) 1983 John Honniball, Bambleweeny Computer Systems   */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-
 #define MAXSYMBOLS    500
 #define MAXCOMMENT     80
 #define MAXLABEL       13
@@ -92,6 +87,7 @@ typedef long int address;
 
 #define BYTES_PER_BLOCK  24
 
-#define MOS_HEX      1
-#define SREC_HEX     2
-#define INTEL_HEX    3
+#define MOS_HEX      1           /* MOS Technology Paper tape format */
+#define SREC_HEX     2           /* Motorola S-Record hex format */
+#define INTEL_HEX    3           /* Intel Hex format */
+

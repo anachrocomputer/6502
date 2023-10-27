@@ -21,6 +21,11 @@
  
 /* #define DB */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
 #include "as6502.h"
 
 #define AREG(c) (((c) == 'A') || ((c) == 'a'))
@@ -841,8 +846,13 @@ const char oper[];
          stat = evaluate (oper, &i, &op);
          if (stat == ERR)
             break;
-         Byte[Nbytes++] = NUM(op & 0xff);
-         Byte[Nbytes++] = NUM(op / 256);
+         
+         if (op <= ADDR(0xffff)) {
+            Byte[Nbytes++] = NUM(op & 0xff);
+            Byte[Nbytes++] = NUM(op / 256);
+         }
+         else
+            nerd ("Word value out of range");
       } while (!(oper[i++] != ',' || Nbytes >= MAXBYTES));
       
       if (stat == ERR && PASS2)
@@ -960,7 +970,7 @@ address *nump;    /* resulting address */
    
    stat = OK;        /* no errors so far... */
 
-   if (str[*ip] == HIBYTE || str[*ip] == LOBYTE)   /* skip Hi & LO prefixes */
+   if (prefix == HIBYTE || prefix == LOBYTE)   /* skip Hi & LO prefixes */
       (*ip)++;       
 
    if (isalpha (str[*ip]) || (str[*ip] == '_'))
@@ -981,7 +991,7 @@ address *nump;    /* resulting address */
          (*ip)++;
          if (str[*ip] == '^') {   /* Check for control chars ("^C) */
             (*ip)++;
-            if (str[*ip] == EOS || str[*ip] == '"')
+            if (str[*ip] == EOS || str[*ip] == ASCII)
                *nump = ADDR('^');                    /* Caret (^) */
             else {
                *nump = ADDR(str[*ip] & 0x1f);       /* Control char */
@@ -992,7 +1002,7 @@ address *nump;    /* resulting address */
             *nump = ADDR(str[*ip]);
             (*ip)++;
          }
-         if (str[*ip] == '"')     /* skip the closing quote */
+         if (str[*ip] == ASCII)   /* skip the closing quote */
             (*ip)++;
          break;
       case OCTAL:       /* Base 8 conversion */
@@ -1122,7 +1132,6 @@ const char *argv[];
    Nline   = 0;
    Errs    = 0;
    Nlabels = 0;               /* Number of labels */
-   Hexfmt  = MOS_HEX;
    
    for (i = 0; i < MAXSYMBOLS; i++) {
       Symbol[i].Label[0]   = EOS;
@@ -1130,16 +1139,14 @@ const char *argv[];
       Symbol[i].References = 0;
    }
 
-   Byte[0] = ERR;
-   Byte[1] = ERR;
-   Byte[2] = ERR;
-   Byte[3] = ERR;
-   Byte[4] = ERR;
+   for (i = 0; i < MAXBYTES; i++)
+      Byte[i] = ERR;
 
    Nbytes  = 0;               /* Number of bytes for current instruction */
    Addr    = ADDR(0);         /* Current assembly address */
    Blkaddr = ADDR(0);         /* Address of first checksum block */
    Blkptr  = 0;               /* Block pointer */
+   Hexfmt  = MOS_HEX;         /* Hex output file format */
 }
 
 
