@@ -24,7 +24,7 @@ START
 LONG__BUT_OK                              ; Long label name
 TOOLONGBY_ONE                             ; One char too long
 TOOLONG_BY_TWO                            ; A bit more too long
-LABEL_THAT_IS_WAAAAAY_TOO_LONG            ; Will be silently truncated
+LABEL_THAT_IS_WAAAAAY_TOO_LONG            ; Will be truncated with a warning
 
 START1          ; begin here
 TOOLONG_BYONE   BRK
@@ -73,14 +73,20 @@ A               ASL     a
                 LDY     ZP,A3
                 STA     ABS,HL
                 
+                lda     #256              ; Immediate data out-of-range
+                ldx     #$ffff
+                ldy     #65536
+                lda     65536             ; Address out-of-range
+                sta     $fffff
+                
                 PHP
                 JMP     NOWHERE
                 JMP     LASTBYTE+1
                 JMP     LASTBYTE+256
                 JMP     LONG__BUT_OK
-;               JMP     TOOLONGBY_ONE     ; Will cause stack smashing and core dump
-;               JMP     TOOLONG_BY_TWO    ; Will cause stack smashing and core dump
-;               JMP     LABEL_THAT_IS_WAAAAAY_TOO_LONG ; Will cause stack smashing and core dump
+                JMP     TOOLONGBY_ONE     ; Will be silently truncated
+                JMP     TOOLONG_BY_TWO    ; Will be silently truncated
+                JMP     LABEL_THAT_IS_WAAAAAY_TOO_LONG ; Will be silently truncated
                 
                 CLC
 DUPLABEL        PLP                       ; Duplicate label
@@ -238,9 +244,13 @@ NEXTPG          byt     $ff,$fe,$fd,$fc
                 WRD     0,1,2,3
                 TEX     "Hello, world"
                 .asciiz "Hello, world"    ; Directive too long, will be truncated
-                fcb     13,10,256
+                TEX     "1234567890123456789012345678901234567890123456789012345678901234567890123456789012"
+                BYT     1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,30,30,31,32
+                fcb     256,257,268
+                fcb     $100,$fff,$ffff,$fffff
                 .fcb    13,10,255
-                FCW     4,65536
+                FCW     65536,65537
+                fcw     $1000,$fffff
                 FCW     NOWHERE
                 BYT     UNDEF_BYTE
                 FCW     -1

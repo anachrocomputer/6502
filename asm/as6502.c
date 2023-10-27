@@ -426,8 +426,9 @@ char label[], mnem[], operand[], comment[];
          const char quote = lin[i];    /* terminating character */
          operand[0] = quote;
          i++;           /* Skip the opening quote */
-         for (j = 1; lin[i] != quote && lin[i] != NEWLINE ; i++, j++)
-            operand[j] = lin[i]; /* Grab operand */
+         for (j = 1; lin[i] != quote && lin[i] != NEWLINE ; i++)
+            if (j < (MAXOPER - 2))
+               operand[j++] = lin[i]; /* Grab operand */
 
          operand[j++] = quote;
          operand[j] = EOS;
@@ -435,8 +436,9 @@ char label[], mnem[], operand[], comment[];
          SKIPBL(lin, i);
       }
       else {   /* Normal operand - not quoted */
-         for (j = 0; lin[i] != ' ' && lin[i] != NEWLINE; i++, j++)
-            operand[j] = lin[i]; /* Grab operand */
+         for (j = 0; lin[i] != ' ' && lin[i] != NEWLINE; i++)
+            if (j < (MAXOPER - 1))
+               operand[j++] = lin[i]; /* Grab operand */
 
          operand[j] = EOS;
 
@@ -1019,8 +1021,9 @@ address *nump;
    char label[MAXLABEL];
 
    for (j = 0; isalpha(str[*ip]) || isdigit(str[*ip])
-               || str[*ip] == '_'; (*ip)++, j++)
-      label[j] = str[*ip];
+               || str[*ip] == '_'; (*ip)++)
+      if (j < (MAXLABEL - 1))
+         label[j++] = str[*ip];
 
    label[j] = EOS;
    *nump = FORWARD;    /* set value to $FFFF if not found */

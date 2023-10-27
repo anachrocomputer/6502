@@ -39,12 +39,9 @@ Once those are installed, we can simply:
 
 Fix test case for use of byte at address $FFFF. Also fix resulting bug in assembler.
 
-Fix stack smashing when operand field contains an over-long label name.
+Fix stack smashing when the comment is too long. First, make a test case.
 
-Fix over-long label names in general.
-
-Fix stack smashing when the mnemonic or directive name is too long.
-Probably also applies to long operands and long comments as well.
+Add warnings when long operands or comments are truncated. Probably needs a generic warning mechanism.
 
 Maybe, just maybe, allow TABs between fields.
 
