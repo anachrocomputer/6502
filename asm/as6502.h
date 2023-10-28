@@ -3,7 +3,7 @@
 
 #define MAXSYMBOLS    500
 #define MAXCOMMENT     80
-#define MAXLABEL       13
+#define MAXLABEL       16
 #define MAXMNEM         5
 #define MAXCYCSTR       5
 #define MAXOPER        81

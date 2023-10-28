@@ -42,11 +42,11 @@ LASTBYTE        equ     $FFFF             ; Highest valid address
 START
 START1          ; begin here
 START2          BRK                       ; Mnemonics are case-insensitive
-L23456789012    brk                       ; Labels can be up to 12 characters long
-AAAAAAAAAAAA    PHP
-ZZZZZZZZZZZZ    pha
-_ZZZZZZZZZZZ    PLP                       ; Labels can begin with an underscore
-_A_A_A_A_A_A    pla                       ;  and contain underscores
+L23456789012345 brk                       ; Labels can be up to 15 characters long
+AAAAAAAAAAAAAAA PHP
+ZZZZZZZZZZZZZZZ pha
+_ZZZZZZZZZZZZZZ PLP                       ; Labels can begin with an underscore
+_A_A_A_A_A_A_A_ pla                       ;  and contain underscores
 COLON_LABEL:    SEC                       ; Allow a label to be followed by a colon for
 COLON:          CLC                       ;  compatibility with assemblers that require one
                 cli
@@ -185,13 +185,13 @@ _OK_LABEL       STY     ABS
 GOOD_LABEL      STY     ZP
 GOOD_LABEL2     STY     ZP,X
 
-                LDA     L23456789012      ; Use the long labels so we don't get a warning
-                LDA     AAAAAAAAAAAA      ;  and also as a test
-                LDA     ZZZZZZZZZZZZ
-                LDA     _ZZZZZZZZZZZ,x
-                LDA     _A_A_A_A_A_A,y
-                LDA     #<_ZZZZZZZZZZZ+<AAAAAAAAAAAA
-                LDY     #>_A_A_A_A_A_A|>ZZZZZZZZZZZZ
+                LDA     L23456789012345   ; Use the long labels so we don't get a warning
+                LDA     AAAAAAAAAAAAAAA   ;  and also as a test
+                LDA     ZZZZZZZZZZZZZZZ
+                LDA     _ZZZZZZZZZZZZZZ,x
+                LDA     _A_A_A_A_A_A_A_,y
+                LDA     #<_ZZZZZZZZZZZZZZ+<AAAAAAAAAAAAAAA
+                LDY     #>_A_A_A_A_A_A_A_|>ZZZZZZZZZZZZZZZ
                 STA     COLON_LABEL
                 STY     COLON
                 LDA     RMB_BEGIN1

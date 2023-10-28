@@ -700,7 +700,7 @@ void symbols ()
       if (Symbol[i].References == 0)
          unused (Symbol[i].Label);
          
-      fprintf (Listing, "%-14.14s %04lX  ", Symbol[i].Label, Symbol[i].Address);
+      fprintf (Listing, "%-15.15s %04lX  ", Symbol[i].Label, Symbol[i].Address);
       if ((i % 4) == 3)
          putc (NEWLINE, Listing);
    }

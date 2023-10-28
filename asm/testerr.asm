@@ -21,14 +21,15 @@ LASTBYTE        equ     $FFFF             ; Highest address
 ORG_LABEL       ORG     $0400             ; ORG should not be labelled
                 
 START
-LONG__BUT_OK                              ; Long label name
-TOOLONGBY_ONE                             ; One char too long
-TOOLONG_BY_TWO                            ; A bit more too long
+UNUSED_LABEL                              ; Should generate a warning but not an error
+LONG__BUT_IS_OK                           ; Long label name
+TOO__LONG_BY_ONE                          ; One char too long
+TOO__LONG__BY_TWO                         ; A bit more too long
 LABEL_THAT_IS_WAAAAAY_TOO_LONG            ; Will be truncated with a warning
 
 START1          ; begin here
-TOOLONG_BYONE   BRK
-TOO_LONG_BYTWO  brk
+TOO_LONG__BY_ONE  BRK
+TOO_LONG__BY__TWO brk
                 asl     a
                 lda     ABS=X             ; Syntax error
                 LDA     ABS=X
@@ -83,10 +84,14 @@ A               ASL     a
                 JMP     NOWHERE
                 JMP     LASTBYTE+1
                 JMP     LASTBYTE+256
-                JMP     LONG__BUT_OK
-                JMP     TOOLONGBY_ONE     ; Will be silently truncated
-                JMP     TOOLONG_BY_TWO    ; Will be silently truncated
+                JMP     LONG__BUT_IS_OK
+                JMP     TOO_LONG__BY_ONE  ; Will be silently truncated
+                JMP     TOO__LONG_BY_ONE  ; Will be silently truncated
+                JMP     TOO__LONG__BY_TWO ; Will be silently truncated
+                JMP     TOO_LONG__BY__TWO ; Will be silently truncated
                 JMP     LABEL_THAT_IS_WAAAAAY_TOO_LONG ; Will be silently truncated
+                JMP     ORG_LABEL
+                JMP     COLON_LABEL
                 
                 CLC
 DUPLABEL        PLP                       ; Duplicate label
