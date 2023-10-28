@@ -828,35 +828,44 @@ const char oper[];
    case FCB:
       do {
          stat = evaluate (oper, &i, &op);
-         if (stat == ERR)
-            break;
          
-         if (op <= ADDR(0xff))
+         if (stat == ERR) {
+            Byte[Nbytes++] = ERR;   /* May just be a forward reference in pass 1. Maintain code size */
+            
+            if (PASS2)
+               nerd ("Undefined label in FCB directive");
+         }
+         else if (op <= ADDR(0xff)) {
             Byte[Nbytes++] = NUM(op);
-         else
+         }
+         else {
             nerd ("Byte value out of range");
+            Byte[Nbytes++] = ERR;  /* Maintain code size by generating one dud byte */
+         }
       } while (!(oper[i++] != ',' || Nbytes >= MAXBYTES));
-      
-      if (stat == ERR && PASS2)
-         nerd ("Undefined label in FCB directive");
       
       break;
    case FCW:
       do {
          stat = evaluate (oper, &i, &op);
-         if (stat == ERR)
-            break;
          
-         if (op <= ADDR(0xffff)) {
+         if (stat == ERR) {
+            Byte[Nbytes++] = ERR;   /* May just be a forward reference in pass 1. Maintain code size */
+            Byte[Nbytes++] = ERR;
+            
+            if (PASS2)
+               nerd ("Undefined label in FCW directive");
+         }
+         else if (op <= ADDR(0xffff)) {
             Byte[Nbytes++] = NUM(op & 0xff);
             Byte[Nbytes++] = NUM(op / 256);
          }
-         else
+         else {
             nerd ("Word value out of range");
+            Byte[Nbytes++] = ERR;  /* Maintain code size by generating two dud bytes */
+            Byte[Nbytes++] = ERR;
+         }
       } while (!(oper[i++] != ',' || Nbytes >= MAXBYTES));
-      
-      if (stat == ERR && PASS2)
-         nerd ("Undefined label in FCW directive");
       
       break;
    case TEX:

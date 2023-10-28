@@ -41,6 +41,8 @@ Fix test case for use of byte at address $FFFF. Also fix resulting bug in assemb
 
 Fix stack smashing when the comment is too long. First, make a test case.
 
+Fix bogus 'Address out of range' error in pass 1 when adding constants to a forward-reference symbol.
+
 Add warnings when long operands or comments are truncated. Probably needs a generic warning mechanism.
 
 Maybe, just maybe, allow TABs between fields.

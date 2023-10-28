@@ -251,6 +251,10 @@ NEXTPG          byt     $ff,$fe,$fd,$fc
                 .fcb    13,10,255
                 FCW     65536,65537
                 fcw     $1000,$fffff
+                FCB     <FORWARD+1
+                FCB     <FORWARD+2
+                FCW     FORWARD+1         ; Bogus 'Address out of range' error
+                FCW     FORWARD+2         ; Bogus 'Address out of range' error
                 FCW     NOWHERE
                 BYT     UNDEF_BYTE
                 FCW     -1
@@ -259,7 +263,7 @@ NEXTPG          byt     $ff,$fe,$fd,$fc
                 byt     1,2,
                 byt     1,,3
                 
-                LDA     LASTBYTE
+FORWARD         LDA     LASTBYTE
                 LDA     LASTBYTE-1
                 JMP     NEARTOP+256
                 JMP     ENDBYTE

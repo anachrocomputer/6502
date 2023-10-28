@@ -271,8 +271,14 @@ NEXTPG          byt     $ff,$fe,$fd,$fc
                 FCW     $FFFE,$FFFF
                 FCW     LASTBYTE-1,LASTBYTE
                 FCW     ENDBYTE-1,ENDBYTE
+                FCB     <FORWARD
+                FCB     <FORWARD-1
+                FCB     <FORWARD-2
+                FCW     FORWARD
+                FCW     FORWARD-1
+                FCW     FORWARD-2
                 
-                LDA     LASTBYTE
+FORWARD         LDA     LASTBYTE
                 LDA     LASTBYTE-1
                 LDX     <HERE
                 LDY     >HERE
