@@ -53,7 +53,8 @@ Add CMOS 6502 instructions and op-codes.
 The assembler was written at a time when the 65C02 was very new,
 if available at all.
 
-Implement RMB directive.
+Add a check in pass 2 that verifies that label addresses are identical to those in pass 1.
+Any discrepancy is an assembler internal error.
 
 Add .asciiz directive.
 

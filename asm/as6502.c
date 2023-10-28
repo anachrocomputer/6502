@@ -880,10 +880,20 @@ const char oper[];
    case END:
       /* Do nothing */
       break;
-/*  case RMB: */
-/*     if (eval (oper, &Nbytes) == ERR) */
-/*        for_ref ("RMB") */
-/*    break; */
+   case RMB:
+      if (eval (oper, &op) == ERR)
+         for_ref ("RMB");
+      else
+         Addr += op;    /* Skip as many bytes as the RMB directive requests */
+      
+      if (PASS2) {
+         if (Blkptr != 0)     /* Flush out any remaining object code */
+            putblock ();
+
+         Blkaddr = Addr;
+      }
+      
+      break;
    }
 }
 

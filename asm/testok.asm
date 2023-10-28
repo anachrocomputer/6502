@@ -194,6 +194,14 @@ GOOD_LABEL2     STY     ZP,X
                 LDY     #>_A_A_A_A_A_A|>ZZZZZZZZZZZZ
                 STA     COLON_LABEL
                 STY     COLON
+                LDA     RMB_BEGIN1
+                LDA     RMB_END1
+                LDA     RMB_BEGIN2
+                LDA     RMB_END2
+                LDA     RMB_BEGIN3
+                LDA     RMB_END3
+                LDA     RMB_BEGIN4
+                LDA     RMB_END4
 
 ; Confusing but legal label names
 X               NOP
@@ -277,7 +285,15 @@ NEXTPG          byt     $ff,$fe,$fd,$fc
                 FCW     FORWARD
                 FCW     FORWARD-1
                 FCW     FORWARD-2
-                
+RMB_BEGIN1      rmb     1                 ; Reserve one byte
+RMB_END1        nop
+RMB_BEGIN2      RMB     768               ; Reserve 768 bytes
+RMB_END2        nop
+RMB_BEGIN3      rmb     16*48             ; Expressions are allowed
+RMB_END3        nop
+RMB_BEGIN4      rmb     EIGHT             ; EQU names or labels are allowed
+RMB_END4        nop
+
 FORWARD         LDA     LASTBYTE
                 LDA     LASTBYTE-1
                 LDX     <HERE
