@@ -41,6 +41,11 @@ Fix test case for use of byte at address $FFFF. Also fix resulting bug in assemb
 
 Fix stack smashing when the comment is too long. First, make a test case.
 
+Fix listing of address of start of RMB directive. Labels at this location work as they should,
+but the listing shows the wrong address. Code generation is also correct. Fixing this would
+also allow ORG directives to be labelled, with the label taking the value of the Program Counter
+before the ORG takes effect (if that's any use).
+
 Fix bogus 'Address out of range' error in pass 1 when adding constants to a forward-reference symbol.
 
 Add warnings when long operands or comments are truncated. Probably needs a generic warning mechanism.
